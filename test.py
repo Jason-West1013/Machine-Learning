@@ -1,8 +1,8 @@
 import scipy.io
 import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
 
+l1Derive =  lambda cost, p, m: cost + (p / (2 * m)) 
+l2Derive = lambda cost, p, m, w: cost + ((p * w) / m)
 
 def gradientDescent(x, y, w, p):
     iterations = 200
@@ -11,9 +11,8 @@ def gradientDescent(x, y, w, p):
 
     for i in range(iterations):
         yHat = x.dot(w)
-        gradient = x.T.dot(yHat - y) / m
-        w = w - t * (gradient + (p/m) * w)
-
+        cost = x.T.dot(yHat - y) / m
+        w = w - t * l2Derive(cost, p, m, w)
     return w
 
 
@@ -43,8 +42,12 @@ print(w)
 w2 = ((matrixX.T * matrixX) + (lamb * np.identity(np.size(matrixX, 1)))
       ).I * matrixX.T * matrixY
 
+
 # print("When Lambda = 1 and p = 2 w is: ")
 # print(w2)
 
 w0 = np.zeros((3, 1))
-print(gradientDescent(matrixX, matrixY, w0, 1))
+realW = gradientDescent(matrixX, matrixY, w0, 0)
+print(realW)
+
+print(matrixX.dot(realW) - matrixY)

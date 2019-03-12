@@ -3,5 +3,7 @@
         "io",
         "linalg",
         "scipy"
-    ]
+    ],
+    "eslint.enable": false,
+    "standard.enable": false
 }
