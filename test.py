@@ -31,7 +31,7 @@ if (np.linalg.matrix_rank(matrixX) == min(np.size(matrixX, 1), np.size(matrixX, 
     print("The matrix is full rank.\n")
 
 # find omega using the equation w = (X^T * X)^-1 * X^T * Y
-w = (matrixX.T * matrixX).I * matrixX.T * matrixY
+w = (matrixX.T * matrixX).I * matrixX.T * matrixY)
 
 # print("The MLE estimate for w is:")
 print(w)
