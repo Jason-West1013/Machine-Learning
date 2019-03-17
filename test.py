@@ -1,53 +1,63 @@
 import scipy.io
 import numpy as np
 
-l1Derive =  lambda cost, p, m: cost + (p / (2 * m)) 
-l2Derive = lambda cost, p, m, w: cost + ((p * w) / m)
-
-def gradientDescent(x, y, w, p):
-    iterations = 200
-    t = 0.1
-    m = len(y)
-
-    for i in range(iterations):
-        yHat = x.dot(w)
-        cost = x.T.dot(yHat - y) / m
-        w = w - t * l2Derive(cost, p, m, w)
-    return w
-
-
 # Load the data from MatLab file and set as matrices
 mat = scipy.io.loadmat('data.mat')
 arrayX = np.array(mat['X'])
 arrayY = np.array(mat['Y'])
-matrixX = np.matrix(mat['X'])
-matrixY = np.matrix(mat['Y'])
-lamb = 1
+x = np.matrix(mat['X'])
+y = np.matrix(mat['Y'])
+
+# gradient descent variables and lambda (p)
+iterations = 200
+t = 0.1
+m = len(y)
+p = 1
 
 # print(matrixX[:, [2]])
 # print(column)
 
-if (np.linalg.matrix_rank(matrixX) == min(np.size(matrixX, 1), np.size(matrixX, 0))):
-    print("The matrix is full rank.\n")
+############
+## Part a ##
+############
+# finding omega using the closed form equation
+w = (x.T * x).I * x.T * y
 
-# find omega using the equation w = (X^T * X)^-1 * X^T * Y
-w = (matrixX.T * matrixX).I * matrixX.T * matrixY)
-
-# print("The MLE estimate for w is:")
+print("Part a: The MLE estimate of w is ")
 print(w)
-
-# print("\n")
+print("\n")
 
 # solution using the closed form solution found in the slides
-w2 = ((matrixX.T * matrixX) + (lamb * np.identity(np.size(matrixX, 1)))
-      ).I * matrixX.T * matrixY
+# w2 = ((matrixX.T * matrixX) + (lamb * np.identity(np.size(matrixX, 1)))).I * matrixX.T * matrixY
 
+############
+## Part b ##
+############
+# starting omega vector
+w = np.zeros((3, 1))
 
-# print("When Lambda = 1 and p = 2 w is: ")
-# print(w2)
+# gradient descent algorithm to find omega with the L2 penalty
+for i in range(iterations):
+    yHat = x.dot(w)
+    gradient = x.T.dot(yHat - y)
+    w -= t * ((gradient + p * w) / m)
 
-w0 = np.zeros((3, 1))
-realW = gradientDescent(matrixX, matrixY, w0, 0)
-print(realW)
+print("Part b: w for p = 2 is ")
+print(w)
+print("\n")
 
-print(matrixX.dot(realW) - matrixY)
+############
+## Part c ##
+############
+w = np.zeros((3, 1))
+
+# gradient descent algorithm to find omega
+# using the sub gradient or the sign of omega for the L1 penalty
+for i in range(iterations):
+    yHat = x.dot(w)
+    gradient = x.T.dot(yHat - y)
+    w -= t * ((gradient + p * np.sign(w)) / m)
+
+print("Part b: w for p = 2 is ")
+print(w)
+print("\n")
