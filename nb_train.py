@@ -1,37 +1,31 @@
+#################################################
+# This program trains the data to a Gaussian
+# Naive Bayes model. 
+#
+# The function take a pandas dataframe containing 
+# the class variable in the first column and the 
+# features in the remaining columns. 
+#
+# Outputs a dictionary containing the Prob of Y, 
+# mu, and sigma. 
+#################################################
 import numpy as np
+import pandas as pd
 
-
-def nb_train(x, y):
-
-    p = np.size(x, 1)
-    n = len(y)
-
-    # dictionary to hold the computed training values
+def nb_train(data):
     nb = {}
-    mu_x_given_y_arr = [[0 for x in range(1)] for y in range(p)]
+    n = data['Y'].count()
 
-    # probability of Y
-    prob_y = (y == 1).sum() / n
-    nb['prob_y'] = prob_y
+    # calculate prior probability 
+    nb['p_y'] = data['Y'][data['Y'] == 1].count() / n
 
-    # compute the mean of X given Y
-    for i in range(p):
-        y_equals_0 = np.mean(x[:, [i]][np.where(y == 0)])
-        y_equals_1 = np.mean(x[:, [i]][np.where(y == 1)])
-        mu_x_given_y_arr[i] = [y_equals_0, y_equals_1]
+    # calculate mean of the features for each class
+    nb['mu_x_given_y'] = data.groupby('Y').mean().T
 
-    mu_x_given_y = np.matrix(mu_x_given_y_arr)
-    nb['mu_x_given_y'] = mu_x_given_y
-
-    # compute the standard deviation based off the mean of X given Y
-    new_x = np.matrix(np.empty([n, p]))
-    for i in range(p):
-        new_x[:, i][np.where(y == 0)] = np.subtract(
-            x[:, i][np.where(y == 0)], mu_x_given_y[:, 0][i])
-        new_x[:, i][np.where(y == 1)] = np.subtract(
-            x[:, i][np.where(y == 1)], mu_x_given_y[:, 1][i])
-
-    sigma_x = new_x.std(0).T
-    nb['sigma_x'] = sigma_x
+    # calculate standard deviation of the features
+    x = data.drop(['Y'], axis=1)
+    x[data['Y'] == 0] = np.subtract(x[data['Y'] == 0], nb['mu_x_given_y'][0])
+    x[data['Y'] == 1] = np.subtract(x[data['Y'] == 1], nb['mu_x_given_y'][1])
+    nb['sigma_x'] = x.std()
 
     return nb
