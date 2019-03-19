@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def nb_train(x, y):
 
     p = np.size(x, 1)
