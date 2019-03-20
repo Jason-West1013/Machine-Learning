@@ -14,6 +14,8 @@ from nb_train import nb_train               # importing nb_train function
 import numpy as np                          # library for matrix operations
 import pandas as pd                         # library to contain the data set
 
+from nb_train2 import nb_train2
+
 # dictionary building the column names
 columns = {
     0: 'Y',
@@ -30,6 +32,8 @@ columns = {
 
 # import the .mat data
 mat = loadmat('breast-cancer-data.mat')
+x = np.matrix(mat['X'])
+y = np.matrix(mat['Y'])
 
 # convert to a dataframe with named columns
 data = pd.DataFrame(np.hstack((mat['Y'], mat['X'])))
@@ -57,7 +61,9 @@ def nb_test(nb, x):
 
 
 # Main
-nb = nb_train(data)
+# nb = nb_train(data)
+# nb2 = nb_train2(x, y)
+# print(nb_test(nb2, x))
 x = data.drop(['Y'], axis=1)
 result = nb_test(nb, x)
 print(result)
