@@ -63,7 +63,6 @@ print("\n")
 # there are 8 possible cases
 
 # all 8 cases of the L0 penalty as a dictionary of lambda functions
-omega_sse = {}
 cases = {
     0: lambda x: np.matrix([x.item(0), 0, 0]),
     1: lambda x: np.matrix([0, x.item(1), 0]),
@@ -82,13 +81,14 @@ omegas = np.empty(len(cases), dtype=object)
 # gradient descent algorithm that takes a omega format 
 # and returns the sse for the minimized omega
 def gradient_descent(w_format):
-    w = np.matrix([0,0,0])
+    w = np.matrix([0,0,0]).T
+    temp = np.zeros(np.size(w))
 
     for i in range(iterations):
-        yHat = x.dot(w.T)
+        yHat = x.dot(w)
         gradient = x.T.dot(yHat - y) / m
         temp = w - t * gradient
-        w = w_format(temp)
+        w = w_format(temp).T
 
     return w
 
@@ -97,8 +97,8 @@ def gradient_descent(w_format):
 for i in range(len(cases)):
     w = gradient_descent(cases[i])
     omegas[i] = w
-    sse[i] = np.sum(np.square(x.dot(w.T) - y))
+    sse[i] = np.sum(np.square(x.dot(w) - y))
 
-# print the omega with the minimum SSE
+# print the omega with the minimum SSEs
 print('Part d: w for p = 0 is')
-print(omegas[np.argmin(sse)].T)
+print(omegas[np.argmin(sse)])
