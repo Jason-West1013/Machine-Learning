@@ -1,5 +1,4 @@
 import sys
-import math
 import numpy as np
 
 
@@ -22,24 +21,18 @@ def lr_gradient(x, y, w, c):
 
 def lr_train(x, y, c, step_size=0.00001, stop_tol=0.0001, max_iter=1000):
     n = len(y)
-    p = np.size(x, 1)
 
     # change (Y = 0) to -1
     y[y == 0] = -1
-
-    # add a feature of 1's to X
-    x = np.hstack((np.ones((n, 1)), x))
 
     # starting omega vector with extra feature
     w = np.zeros((np.size(x, 1), 1))
 
     # use gradient ascent to calculate the optimum omega vector
     for i in range(max_iter):
-        gradnorm = np.linalg.norm(lr_gradient(x, y, w, c) / n)
-        w = w + step_size * lr_gradient(x, y, w, c)
-        if gradnorm <= stop_tol:
+        grad = lr_gradient(x, y, w, c)
+        w = w + step_size * grad
+        if np.linalg.norm(grad / n) <= stop_tol:
             break
-    # w  = w + step_size * lr_gradient(x, y, w, c)
 
-    print(w)
-    return 0
+    return w

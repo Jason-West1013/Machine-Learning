@@ -9,5 +9,16 @@ mat = scipy.io.loadmat('breast-cancer-data.mat')
 x = np.matrix(mat['X'])
 y = np.matrix(mat['Y'], dtype=np.dtype('i4'))
 
-result = lr_train(x, y, 1)
-# print(result)
+
+def lr_test(w, x):
+    p_y = np.divide(1, 1 + np.exp(-x.dot(w)))
+    y = p_y >= 0.5
+    return y.astype(int)
+
+
+# add a feature of 1's to X
+x = np.hstack((np.ones((len(y), 1)), x))
+
+w = lr_train(x, y, 1)
+result = lr_test(w, x)
+print(result)
