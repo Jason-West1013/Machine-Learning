@@ -1,44 +1,45 @@
 import sys
+import math
 import numpy as np
 
-def sigmoid(z):
-    realmax = sys.float_info.max
-    return np.divide(1, 1 + np.exp(z))
 
 # c is lambda
 def lr_gradient(x, y, w, c):
-    # temp array to hold omega values
     realmax = sys.float_info.max
-    temp = [[0 for x in range(1)] for y in range(len(w))]
-    #data = np.multiply(-y, x.dot(w))
+    temp = np.zeros((len(w), 1))
     ex = np.exp(np.multiply(-y, x.dot(w)))
-    if (ex > realmax):
-        
-    prob = 1 - np.divide(1, 1 + np.exp(np.multiply(-y, x.dot(w))))
+
+    # replace any infinity values with max float
+    ex[ex == float('inf')] = realmax
 
     # calculate the gradient of the omega vector
     for i in range(len(w)):
-        temp[i] = np.sum(np.multiply(np.multiply(y, x[:, i]), prob)) - (c * w[i])
-        #temp[i] = np.sum(np.multiply(np.multiply(y, x[:, i]), sigmoid(data)))
+        temp[i] = np.sum(np.multiply(np.multiply(y, x[:, i]), 1 -
+                                     np.divide(1, 1 + ex))) - (c * w[i])
 
-    return np.matrix(temp)
+    return temp
 
-def lr_train(x, y, c, step_size=0.1, stop_tol=0.001, max_iter=1000):
+
+def lr_train(x, y, c, step_size=0.00001, stop_tol=0.0001, max_iter=1000):
     n = len(y)
     p = np.size(x, 1)
 
     # change (Y = 0) to -1
     y[y == 0] = -1
 
-    # starting omega vector
-    w = np.zeros((p, 1))
+    # add a feature of 1's to X
+    x = np.hstack((np.ones((n, 1)), x))
 
-    #gradient = lr_gradient(x, y, w, c)
+    # starting omega vector with extra feature
+    w = np.zeros((np.size(x, 1), 1))
 
     # use gradient ascent to calculate the optimum omega vector
     for i in range(max_iter):
-        w = w + step_size * lr_gradient(x, y, w, c) 
-    #w  = w + step_size * lr_gradient(x, y, w, c)
+        gradnorm = np.linalg.norm(lr_gradient(x, y, w, c) / n)
+        w = w + step_size * lr_gradient(x, y, w, c)
+        if gradnorm <= stop_tol:
+            break
+    # w  = w + step_size * lr_gradient(x, y, w, c)
 
     print(w)
     return 0

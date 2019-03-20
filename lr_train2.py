@@ -26,20 +26,29 @@ y = np.array(mat['Y'], dtype=np.dtype('i4'))
 data = pd.DataFrame(np.hstack((y, mat['X'])))
 data.columns = list(columns.values())
 
+
 def lr_gradient(x, y, w, c):
-    for i in range(len(w)):
-        print(i)
+    grad = np.zeros((len(w), 1))
+    for i in range(len(grad)):
+        p_y_given_xw = 1 / (1 + np.exp(-y[0] * x.dot(w)))
+        grad[i] = np.sum(y[0] * x[columns[i + 1]] *
+                         (1 - p_y_given_xw))
+    return grad
+
 
 def lr_train(data, c, step_size=0.1, stop_tol=0.001, max_iter=1000):
     n = data['Y'].count()
     p = len(data.columns) - 1
 
     # change (Y = 0) to -1
-    y = data['Y'].replace(0,-1)
-    x = data.frop(['Y'], axis=1)
+    y = data['Y'].replace(0, -1)
+    x = data.drop(['Y'], axis=1)
 
-    w = np.zeros((p,1))
+    w = np.zeros((p, 1))
 
-    lr_gradient(x, y, w, c)
+    p_y_given_xw = 1 / (1 + np.exp(-y[0] * x.dot(w)))
+    #print(lr_gradient(x, y, w, c))
+    print(y[0] * (1 - p_y_given_xw))
+
 
 lr_train(data, 0)
