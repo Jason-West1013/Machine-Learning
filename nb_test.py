@@ -13,7 +13,6 @@ from scipy.io import loadmat
 from nb_train import nb_train
 import numpy as np
 import pandas as pd
-import math
 
 # dictionary building the column names
 columns = {
