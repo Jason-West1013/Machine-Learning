@@ -7,7 +7,7 @@ mat = scipy.io.loadmat('breast-cancer-data.mat')
 
 # store data
 x = np.matrix(mat['X'])
-y = np.matrix(mat['Y'], dtype=np.dtype('i4')) # to change Y = 0 to Y = -1
+y = np.matrix(mat['Y'], dtype=np.dtype('i4'))
 
 
 def lr_test(w, x):
@@ -15,11 +15,11 @@ def lr_test(w, x):
     y = p_y >= 0.5
     return y.astype(int)
 
-### for testing ###
+# for testing purposes
 
 # add a feature of 1's to X
 # x = np.hstack((np.ones((len(y), 1)), x))
 
 # w, obj, gradnorm = lr_train(x, y, 1)
 # result = lr_test(w, x)
-# print(result)
+# # print(result)
