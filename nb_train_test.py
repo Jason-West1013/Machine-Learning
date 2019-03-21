@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def nb_train2(x, y):
+def nb_train(x, y):
 
     p = np.size(x, 1)
     n = len(y)
@@ -20,7 +20,7 @@ def nb_train2(x, y):
         y_equals_1 = np.mean(x[:, [i]][np.where(y == 1)])
         mu_x_given_y_arr[i] = [y_equals_0, y_equals_1]
 
-    mu_x_given_y = np.matrix(mu_x_given_y_arr)
+    mu_x_given_y = np.array(mu_x_given_y_arr)
     nb['mu_x_given_y'] = mu_x_given_y
 
     # compute the standard deviation based off the mean of X given Y

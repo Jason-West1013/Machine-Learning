@@ -14,7 +14,6 @@ from nb_train import nb_train               # importing nb_train function
 import numpy as np                          # library for matrix operations
 import pandas as pd                         # library to contain the data set
 
-from nb_train2 import nb_train2
 
 # dictionary building the column names
 columns = {
@@ -54,16 +53,16 @@ def nb_test(nb, x):
 
     # place result from function in a dataframe
     d = {'0': log_p_x_given_y_0, '1': log_p_x_given_y_1}
-    result = pd.DataFrame(data=d)
+    result = pd.DataFrame(data=d).idxmax(axis=1)
 
     # return a vector of the maximum Y probability
-    return result.idxmax(axis=1)
+    return result.values
 
 
 # Main
-# nb = nb_train(data)
+nb = nb_train(data)
 # nb2 = nb_train2(x, y)
 # print(nb_test(nb2, x))
-# x = data.drop(['Y'], axis=1)
-# result = nb_test(nb, x)
-# print(result)
+x = data.drop(['Y'], axis=1)
+result = nb_test(nb, x)
+print(np.size(result))

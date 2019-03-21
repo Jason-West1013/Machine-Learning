@@ -1,8 +1,6 @@
 import sys
 import numpy as np
 
-# c is lambda
-
 
 def lr_gradient(x, y, w, c):
     temp = np.zeros((len(w), 1))
