@@ -13,7 +13,7 @@
 
 def nb_train(data):
     nb = {}
-    n = data['Y'].count()
+    n = float(data['Y'].count())
 
     # calculate prior probability
     nb['p_y'] = data['Y'][data['Y'] == 1].count() / n

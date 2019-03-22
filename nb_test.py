@@ -16,27 +16,27 @@ import pandas as pd                         # library to contain the data set
 
 
 # dictionary building the column names
-columns = {
-    0: 'Y',
-    1: 'X1',
-    2: 'X2',
-    3: 'X3',
-    4: 'X4',
-    5: 'X5',
-    6: 'X6',
-    7: 'X7',
-    8: 'X8',
-    9: 'X9'
-}
+# columns = {
+#     0: 'Y',
+#     1: 'X1',
+#     2: 'X2',
+#     3: 'X3',
+#     4: 'X4',
+#     5: 'X5',
+#     6: 'X6',
+#     7: 'X7',
+#     8: 'X8',
+#     9: 'X9'
+# }
 
-# import the .mat data
-mat = loadmat('breast-cancer-data.mat')
-x = np.matrix(mat['X'])
-y = np.matrix(mat['Y'])
+# # import the .mat data
+# mat = loadmat('breast-cancer-data.mat')
+# x = np.matrix(mat['X'])
+# y = np.matrix(mat['Y'])
 
-# convert to a dataframe with named columns
-data = pd.DataFrame(np.hstack((mat['Y'], mat['X'])))
-data.columns = list(columns.values())
+# # convert to a dataframe with named columns
+# data = pd.DataFrame(np.hstack((mat['Y'], mat['X'])))
+# data.columns = list(columns.values())
 
 
 def nb_test(nb, x):
@@ -53,16 +53,19 @@ def nb_test(nb, x):
 
     # place result from function in a dataframe
     d = {'0': log_p_x_given_y_0, '1': log_p_x_given_y_1}
-    result = pd.DataFrame(data=d).idxmax(axis=1)
-
+    result = pd.DataFrame(data=d)
     # return a vector of the maximum Y probability
-    return result.values
+    return result.idxmax(axis=1).astype(int)
 
 
 # Main
-nb = nb_train(data)
-# nb2 = nb_train2(x, y)
-# print(nb_test(nb2, x))
-x = data.drop(['Y'], axis=1)
-result = nb_test(nb, x)
-print(np.size(result))
+
+# nb = nb_train(data)
+# # nb2 = nb_train2(x, y)
+# # print(nb_test(nb2, x))
+# x = data.drop(['Y'], axis=1)
+# result = nb_test(nb, x)
+# total_y_1 = data['Y'][data['Y'] == 1].count()
+# n = data['Y'].count()
+# print(total_y_1 / )
+# print()

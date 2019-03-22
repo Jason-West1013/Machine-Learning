@@ -14,7 +14,7 @@ def lr_gradient(x, y, w, c):
     return temp
 
 
-def lr_train(x, y, c, step_size=0.00001, stop_tol=0.0001, max_iter=1000):
+def lr_train(x, y, c, step_size=1e-5, stop_tol=1e-4, max_iter=1000):
     n = len(y)
     realmax = sys.float_info.max
     np.seterr(over='ignore')        # ignore the exp overflow warnings
@@ -31,8 +31,7 @@ def lr_train(x, y, c, step_size=0.00001, stop_tol=0.0001, max_iter=1000):
     # use gradient ascent to calculate the optimum omega vector
     for i in range(max_iter):
         gradnorm = np.linalg.norm(lr_gradient(x, y, w, c) / n)
-        obj[i] = -np.sum(np.log(np.minimum(realmax, 1 +
-                                           np.exp(np.multiply(-y, x.dot(w))))))
+        obj[i] = -np.sum(np.log(np.minimum(realmax, 1 + np.exp(np.multiply(-y, x.dot(w))))))
         w = w + step_size * lr_gradient(x, y, w, c)
         if gradnorm <= stop_tol:
             break
